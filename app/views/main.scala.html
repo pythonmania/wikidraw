@@ -1,0 +1,48 @@
+<!DOCTYPE html5>
+
+<html>
+    <head>
+        <title>wikidraw</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-responsive.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/wikidraw.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+    </head>
+    <body>
+    	<div>
+			<div class="span6">
+				<h4>edit</h4>
+<textarea id="edit">
+` prepare
+
+* activity
+
+( input
+
+) output
+</textarea>
+		    </div>
+			<div class="span6">
+		    	<h4>preview</h4>
+<svg id='preview' xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <text x="10" y="15" fill="red">I love SVG! 한글도!</text>
+</svg>
+		    </div>
+		</div>
+		<div class="span12">
+<h4>todo</h4>
+<ul>
+<li>Raphael JavaScript Library : http://raphaeljs.com/</li>
+</ul>
+<h4>SVG draw sequence</h4>
+<ol>
+<li>draw text node : text</li>
+<li>get text node size : getBBox()</li>
+<li>draw border using path node</li>
+<li>move to center : transform</li>
+</ol>
+		</div>
+    </body>
+</html>

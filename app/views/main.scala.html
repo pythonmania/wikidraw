@@ -9,9 +9,10 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/raphael-min.js")" type="text/javascript"></script>
     </head>
     <body>
-    	<div>
+    	<div class="row-fluid">
 			<div class="span6">
 				<h4>edit</h4>
 <textarea id="edit">
@@ -26,15 +27,13 @@
 		    </div>
 			<div class="span6">
 		    	<h4>preview</h4>
-<svg id='preview' xmlns="http://www.w3.org/2000/svg" version="1.1">
-  <text x="10" y="15" fill="red">I love SVG! 한글도!</text>
-</svg>
+				<div id='preview'></div>
 		    </div>
 		</div>
-		<div class="span12">
+		<div class="row-fluid">
 <h4>todo</h4>
 <ul>
-<li>Raphael JavaScript Library : http://raphaeljs.com/</li>
+<li>Raphael JavaScript Library : <a href="http://raphaeljs.com/">raphaeljs.com</a></li>
 </ul>
 <h4>SVG draw sequence</h4>
 <ol>
@@ -44,5 +43,43 @@
 <li>move to center : transform</li>
 </ol>
 		</div>
+		
+		<script language="javascript">
+var paper = Raphael('preview');
+var graphUnit = 50;
+
+prepare('안녕하세요,')
+
+//activity(paper, '안녕하세요, activity')
+
+//input(paper, '안녕하세요, input')
+
+//output(paper, '안녕하세요, output')
+
+function prepare(text) {
+	var y = 3
+
+	var prepareText = paper.text(paper.width / 2, y*graphUnit, text).attr({'font-size':20})
+	var prepareTextBBox = prepareText.getBBox()
+	var x = prepareTextBBox.x
+	var x2 = prepareTextBBox.x2
+	var y = prepareTextBBox.y
+	var y2 = prepareTextBBox.y2
+	var ym = (y + y2) / 2
+	var w = prepareTextBBox.width
+	var h = prepareTextBBox.height
+	
+	var pathString = 'M' + (x - graphUnit) + ',' + (y - graphUnit)
+	pathString += 'H' + (x2 + graphUnit)
+	pathString += 'L' + (x2 + graphUnit * 2) + ',' + (ym)
+	pathString += 'L' + (x2 + graphUnit) + ',' + (y2 + graphUnit)
+	pathString += 'H' + (x - graphUnit)
+	pathString += 'L' + (x - graphUnit * 2) + ',' + (ym)
+	pathString += 'L' + (x - graphUnit) + ',' + (y - graphUnit)
+
+	var prepareOutline = paper.path(pathString)
+}
+
+		</script>
     </body>
 </html>

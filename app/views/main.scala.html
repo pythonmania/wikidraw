@@ -32,24 +32,52 @@
 		</div>
 		<div class="row-fluid">
 <h4>todo</h4>
-<ul>
+<ol>
 <li>draw arrow between shape</li>
-</ul>
+<li>parse input DSL into raphael SVG script</li>
+</ol>
 		</div>
 		
 		<script language="javascript">
 var paper = Raphael('preview');
 var unit = 15;
+var arrowunit = 8;
 var fontsize = 16;
 var shapeY = 40
 
-prepare('안녕하세요, prepare')
+var prepare = prepare('안녕하세요, prepare')
 
-activity('안녕하세요, activity')
+var activity = activity('안녕하세요, activity')
 
-input('안녕하세요, input')
+var input = input('안녕하세요, input')
 
-output('안녕하세요, output')
+var output = output('안녕하세요, output')
+
+arrow(prepare, activity)
+
+arrow(activity, input)
+
+arrow(input, output)
+
+function arrow(src, tgt) {
+	var srcBBox = src.getBBox()
+	var tgtBBox = tgt.getBBox()
+
+	var startX = srcBBox.width / 2 + srcBBox.x
+	var startY = srcBBox.y2
+	var endX = startX
+	var endY = tgtBBox.y
+	var headX = endX - arrowunit
+	var headX2 = endX + arrowunit
+	var headY = endY - arrowunit
+	
+	var pathString = 'M' + startX + ',' + startY
+	pathString += 'V' + endY
+	pathString += 'L' + headX + ',' + headY
+	pathString += 'L' + headX2 + ',' + headY
+	pathString += 'L' + endX + ',' + endY	
+	return paper.path(pathString)
+}
 
 function prepare(text) {
 	var prepareText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
@@ -99,7 +127,7 @@ function input(text) {
 	pathString += 'L' + (x2 + unit * 2) + ',' + (ym)
 	pathString += 'L' + (x2 + unit) + ',' + (y2 + unit)
 	pathString += 'H' + (x - unit)
-	pathString += 'V' + (x - unit) + ',' + (y - unit)
+	pathString += 'V' + (y - unit)
 
 	return paper.path(pathString)
 }

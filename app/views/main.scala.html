@@ -16,13 +16,13 @@
 			<div class="span6">
 				<h4>edit</h4>
 <textarea id="edit">
-` prepare
+` 안녕하세요, prepare
 
-* activity
+* 안녕하세요, activity
 
-( input
+( 안녕하세요, input
 
-) output
+) 안녕하세요, output
 </textarea>
 		    </div>
 			<div class="span6">
@@ -33,53 +33,96 @@
 		<div class="row-fluid">
 <h4>todo</h4>
 <ul>
-<li>Raphael JavaScript Library : <a href="http://raphaeljs.com/">raphaeljs.com</a></li>
+<li>draw arrow between shape</li>
 </ul>
-<h4>SVG draw sequence</h4>
-<ol>
-<li>draw text node : text</li>
-<li>get text node size : getBBox()</li>
-<li>draw border using path node</li>
-<li>move to center : transform</li>
-</ol>
 		</div>
 		
 		<script language="javascript">
 var paper = Raphael('preview');
-var graphUnit = 50;
+var unit = 15;
+var fontsize = 16;
+var shapeY = 40
 
-prepare('안녕하세요,')
+prepare('안녕하세요, prepare')
 
-//activity(paper, '안녕하세요, activity')
+activity('안녕하세요, activity')
 
-//input(paper, '안녕하세요, input')
+input('안녕하세요, input')
 
-//output(paper, '안녕하세요, output')
+output('안녕하세요, output')
 
 function prepare(text) {
-	var y = 3
-
-	var prepareText = paper.text(paper.width / 2, y*graphUnit, text).attr({'font-size':20})
+	var prepareText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
 	var prepareTextBBox = prepareText.getBBox()
 	var x = prepareTextBBox.x
 	var x2 = prepareTextBBox.x2
 	var y = prepareTextBBox.y
 	var y2 = prepareTextBBox.y2
 	var ym = (y + y2) / 2
-	var w = prepareTextBBox.width
-	var h = prepareTextBBox.height
+	shapeY += prepareTextBBox.height + (unit * 4)
 	
-	var pathString = 'M' + (x - graphUnit) + ',' + (y - graphUnit)
-	pathString += 'H' + (x2 + graphUnit)
-	pathString += 'L' + (x2 + graphUnit * 2) + ',' + (ym)
-	pathString += 'L' + (x2 + graphUnit) + ',' + (y2 + graphUnit)
-	pathString += 'H' + (x - graphUnit)
-	pathString += 'L' + (x - graphUnit * 2) + ',' + (ym)
-	pathString += 'L' + (x - graphUnit) + ',' + (y - graphUnit)
+	var pathString = 'M' + (x - unit) + ',' + (y - unit)
+	pathString += 'H' + (x2 + unit)
+	pathString += 'L' + (x2 + unit * 2) + ',' + (ym)
+	pathString += 'L' + (x2 + unit) + ',' + (y2 + unit)
+	pathString += 'H' + (x - unit)
+	pathString += 'L' + (x - unit * 2) + ',' + (ym)
+	pathString += 'L' + (x - unit) + ',' + (y - unit)
 
-	var prepareOutline = paper.path(pathString)
+	return paper.path(pathString)
 }
 
+function activity(text) {
+	var activityText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
+	var activityTextBBox = activityText.getBBox()
+	var x = activityTextBBox.x
+	var x2 = activityTextBBox.x2
+	var y = activityTextBBox.y
+	var y2 = activityTextBBox.y2
+	shapeY += activityTextBBox.height + (unit * 4)
+	
+	return paper.rect((x-unit), (y-unit), (x2-x+(2*unit)), (y2-y+(2*unit)))
+}
+
+function input(text) {
+	var activityText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
+	var activityTextBBox = activityText.getBBox()
+	var x = activityTextBBox.x
+	var x2 = activityTextBBox.x2
+	var y = activityTextBBox.y
+	var y2 = activityTextBBox.y2
+	var ym = (y + y2) / 2
+	shapeY += activityTextBBox.height + (unit * 4)
+	
+	var pathString = 'M' + (x - unit) + ',' + (y - unit)
+	pathString += 'H' + (x2 + unit)
+	pathString += 'L' + (x2 + unit * 2) + ',' + (ym)
+	pathString += 'L' + (x2 + unit) + ',' + (y2 + unit)
+	pathString += 'H' + (x - unit)
+	pathString += 'V' + (x - unit) + ',' + (y - unit)
+
+	return paper.path(pathString)
+}
+
+function output(text) {
+	var activityText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
+	var activityTextBBox = activityText.getBBox()
+	var x = activityTextBBox.x
+	var x2 = activityTextBBox.x2
+	var y = activityTextBBox.y
+	var y2 = activityTextBBox.y2
+	var ym = (y + y2) / 2
+	shapeY += activityTextBBox.height + (unit * 4)
+	
+	var pathString = 'M' + (x - unit) + ',' + (y - unit)
+	pathString += 'H' + (x2 + unit)
+	pathString += 'V' + (y2 + unit)
+	pathString += 'H' + (x - unit)
+	pathString += 'L' + (x - unit * 2) + ',' + (ym)
+	pathString += 'L' + (x - unit) + ',' + (y - unit)
+
+	return paper.path(pathString)
+}
 		</script>
     </body>
 </html>

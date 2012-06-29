@@ -142,10 +142,10 @@ function output(text) {
 	
 	var pathString = 'M' + (x - unit) + ',' + (y - unit)
 	pathString += 'H' + (x2 + unit)
-	pathString += 'V' + (y2 + unit)
+	pathString += 'L' + (x2 + unit * 2) + ',' + (ym)
+	pathString += 'L' + (x2 + unit) + ',' + (y2 + unit)
 	pathString += 'H' + (x - unit)
-	pathString += 'L' + (x - unit * 2) + ',' + (ym)
-	pathString += 'L' + (x - unit) + ',' + (y - unit)
+	pathString += 'V' + (y - unit)
 
 	return paper.path(pathString)
 }
@@ -155,21 +155,9 @@ function output(text) {
 		$.getJSON('githubIssues', function(issues) {
 			for (var i=0; i<issues.length; i++) {
 				var issue = issues[i]
-				$('#issues').append('<li><a href="' + issue.html_url + '">' + issue.title + '</a></li>')
+				$('#issues').append('<li><a href="' + issue.html_url + '">' + issue.title + ' : ' + issue.body + '</a></li>')
 			}
 		});
-		/*
-		$.ajax({
-			url: 'https://api.github.com/repos/pythonmania/wikidraw/issues',
-			type: 'GET',
-			success: function(issues) {
-				for (var i=0; i<issues.length; i++) {
-					var issue = issues[i]
-					$('#issues').append('<li><a href="' + issue.html_url + '">' + issue.title + '</a></li>')
-				}
-			}
-		});
-		*/
 		</script>
     </body>
 </html>

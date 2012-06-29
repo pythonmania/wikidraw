@@ -152,12 +152,24 @@ function output(text) {
 		</script>
 		
 		<script language="javascript">
-$.get('https://api.github.com/repos/pythonmania/wikidraw/issues', function(issues) {
-	for (var i=0; i<issues.length; i++) {
-		var issue = issues[i]
-		$('#issues').append('<li><a href="' + issue.html_url + '">' + issue.title + '</a></li>')
-	}
-});
+		$.getJSON('githubIssues', function(issues) {
+			for (var i=0; i<issues.length; i++) {
+				var issue = issues[i]
+				$('#issues').append('<li><a href="' + issue.html_url + '">' + issue.title + '</a></li>')
+			}
+		});
+		/*
+		$.ajax({
+			url: 'https://api.github.com/repos/pythonmania/wikidraw/issues',
+			type: 'GET',
+			success: function(issues) {
+				for (var i=0; i<issues.length; i++) {
+					var issue = issues[i]
+					$('#issues').append('<li><a href="' + issue.html_url + '">' + issue.title + '</a></li>')
+				}
+			}
+		});
+		*/
 		</script>
     </body>
 </html>

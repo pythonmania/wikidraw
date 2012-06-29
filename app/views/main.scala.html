@@ -31,11 +31,9 @@
 		    </div>
 		</div>
 		<div class="row-fluid">
-<h4>todo</h4>
-<ol>
-<li>draw arrow between shape</li>
-<li>parse input DSL into raphael SVG script</li>
-</ol>
+<h4>github issues</h4>
+<ul id='issues'>
+</ul>
 		</div>
 		
 		<script language="javascript">
@@ -59,7 +57,7 @@ arrow(activity, input)
 
 arrow(input, output)
 
-function arrow(src, tgt) {
+function arrow(src, tgt) { 
 	var srcBBox = src.getBBox()
 	var tgtBBox = tgt.getBBox()
 
@@ -151,6 +149,15 @@ function output(text) {
 
 	return paper.path(pathString)
 }
+		</script>
+		
+		<script language="javascript">
+$.get('https://api.github.com/repos/pythonmania/wikidraw/issues', function(issues) {
+	for (var i=0; i<issues.length; i++) {
+		var issue = issues[i]
+		$('#issues').append('<li><a href="' + issue.html_url + '">' + issue.title + '</a></li>')
+	}
+});
 		</script>
     </body>
 </html>

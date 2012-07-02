@@ -15,6 +15,7 @@
     	<div class="row-fluid">
 			<div class="span6">
 				<h4>edit</h4>
+@*
 <textarea id="edit">
 ` 안녕하세요, prepare
 
@@ -23,6 +24,9 @@
 ( 안녕하세요, input
 
 ) 안녕하세요, output
+</textarea>
+*@
+<textarea id="edit">
 </textarea>
 		    </div>
 			<div class="span6">
@@ -37,6 +41,37 @@
 		</div>
 		
 		<script language="javascript">
+$('#edit').on('input', function(event) {
+	render(event.currentTarget.value)
+})
+
+var paper = Raphael('preview');
+var unit = 15;
+var arrowunit = 8;
+var fontsize = 16;
+var shapeY = 40
+
+function render(wikitext) {
+	paper.clear();
+	shapeY = 40
+
+	$.each(wikitext.split('\n'), function() {
+		var keyword = this.substr(0, 1)
+		switch(keyword) {
+		case '`':
+			prepare(this.substr(2))
+			break
+		case '*':
+			activity(this.substr(2))
+			break
+		case '<':
+			input(this.substr(2))
+			break
+		}
+	})
+}
+
+/*
 var paper = Raphael('preview');
 var unit = 15;
 var arrowunit = 8;
@@ -56,7 +91,7 @@ arrow(prepare, activity)
 arrow(activity, input)
 
 arrow(input, output)
-
+*/
 function arrow(src, tgt) { 
 	var srcBBox = src.getBBox()
 	var tgtBBox = tgt.getBBox()

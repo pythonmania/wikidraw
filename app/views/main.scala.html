@@ -15,18 +15,14 @@
     	<div class="row-fluid">
 			<div class="span6">
 				<h4>edit</h4>
-@*
 <textarea id="edit">
 ` 안녕하세요, prepare
 
 * 안녕하세요, activity
 
-( 안녕하세요, input
+< 안녕하세요, input
 
-) 안녕하세요, output
-</textarea>
-*@
-<textarea id="edit">
+< 안녕하세요, output
 </textarea>
 		    </div>
 			<div class="span6">
@@ -67,52 +63,30 @@ function render(wikitext) {
 		case '<':
 			input(this.substr(2))
 			break
+		default:
+			arrow()
 		}
 	})
+	$('#edit').focus()
 }
 
-/*
-var paper = Raphael('preview');
-var unit = 15;
-var arrowunit = 8;
-var fontsize = 16;
-var shapeY = 40
+render($('#edit').val())
 
-var prepare = prepare('안녕하세요, prepare')
-
-var activity = activity('안녕하세요, activity')
-
-var input = input('안녕하세요, input')
-
-var output = output('안녕하세요, output')
-
-arrow(prepare, activity)
-
-arrow(activity, input)
-
-arrow(input, output)
-*/
-function arrow(src, tgt) { 
-	var srcBBox = src.getBBox()
-	var tgtBBox = tgt.getBBox()
-
-	var startX = srcBBox.width / 2 + srcBBox.x
-	var startY = srcBBox.y2
-	var endX = startX
-	var endY = tgtBBox.y
-	var headX = endX - arrowunit
-	var headX2 = endX + arrowunit
-	var headY = endY - arrowunit
+function arrow() { 
+	var X = paper.width / 2
+	var startY = shapeY - (unit * 4)
+	var endY = shapeY - (unit * 2)
 	
-	var pathString = 'M' + startX + ',' + startY
+	var pathString = 'M' + X + ',' + startY
 	pathString += 'V' + endY
-	pathString += 'L' + headX + ',' + headY
-	pathString += 'L' + headX2 + ',' + headY
-	pathString += 'L' + endX + ',' + endY	
+	pathString += 'L' + (X-arrowunit) + ',' + (endY-arrowunit)
+	pathString += 'L' + (X+arrowunit) + ',' + (endY-arrowunit)
+	pathString += 'L' + X + ',' + endY	
 	return paper.path(pathString)
 }
 
 function prepare(text) {
+	var text = text.split("\\n").join('\n')
 	var prepareText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
 	var prepareTextBBox = prepareText.getBBox()
 	var x = prepareTextBBox.x
@@ -134,6 +108,7 @@ function prepare(text) {
 }
 
 function activity(text) {
+	var text = text.split("\\n").join('\n')
 	var activityText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
 	var activityTextBBox = activityText.getBBox()
 	var x = activityTextBBox.x
@@ -146,6 +121,7 @@ function activity(text) {
 }
 
 function input(text) {
+	var text = text.split("\\n").join('\n')
 	var activityText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
 	var activityTextBBox = activityText.getBBox()
 	var x = activityTextBBox.x
@@ -166,6 +142,7 @@ function input(text) {
 }
 
 function output(text) {
+	var text = text.split("\\n").join('\n')
 	var activityText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
 	var activityTextBBox = activityText.getBBox()
 	var x = activityTextBBox.x

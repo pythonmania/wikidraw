@@ -77,24 +77,6 @@ function render(wikitext) {
 			shapes.push(input(textSrc.substr(2)))
 		}
 	}
-	@*
-	$.map(wikitext.split('\n'), function(el, idx) {
-		if (el.length == 0) {
-			return arrow()
-		}
-		
-		var keyword = el.substr(0, 1)
-		switch(keyword) {
-		case '`':
-			return prepare(el.substr(2))
-		case '*':
-			return activity(el.substr(2))
-		case '<':
-			return input(el.substr(2))
-		}
-	})
-	*@
-	
 	//shapes.pop().remove()
 	
 	// layout shapes
@@ -109,16 +91,6 @@ function render(wikitext) {
 		console.log(shape)
 		Y += height
 	}
-	@*
-	$.each(shapes, function(idx, el) {
-		var height = el.getBBox().height
-		var width = el.getBBox().width
-		console.log(X, Y)
-		el.transform('...T' + X + ',' + Y)
-		console.log(el)
-		Y += height
-	})
-	*@
 
 	// draw arrow between shapes
 

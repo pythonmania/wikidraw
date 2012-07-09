@@ -17,6 +17,10 @@
 				<h4>edit</h4>
 <textarea id="edit">
 ` 안녕하세요, prepare
+</textarea>
+@*
+<textarea id="edit">
+` 안녕하세요, prepare
 
 * 안녕하세요, activity
 
@@ -24,6 +28,7 @@
 
 < 안녕하세요, output
 </textarea>
+*@
 		    </div>
 			<div class="span6">
 		    	<h4>preview</h4>
@@ -46,46 +51,119 @@ var unit = 15;
 var arrowunit = 8;
 var fontsize = 16;
 var shapeY = 40
+var centerX = 0
+var centerY = 0
 
 function render(wikitext) {
+	// reset paper
 	paper.clear();
-	shapeY = 40
+	centerX = paper.width / 2
+	centerY = paper.height / 2
 
-	$.each(wikitext.split('\n'), function() {
-		var keyword = this.substr(0, 1)
+	// generate each shapes
+	var shapes = []
+	for (var textSrc in wikitext.split('\n')) {
+		if (textSrc.length == 0) {
+			shapes.push(arrow())
+		}
+		
+		var keyword = textSrc.substr(0, 1)
 		switch(keyword) {
 		case '`':
-			prepare(this.substr(2))
-			break
+			shapes.push(prepare(textSrc.substr(2)))
 		case '*':
-			activity(this.substr(2))
-			break
+			shapes.push(activity(textSrc.substr(2)))
 		case '<':
-			input(this.substr(2))
-			break
-		default:
-			arrow()
+			shapes.push(input(textSrc.substr(2)))
+		}
+	}
+	@*
+	$.map(wikitext.split('\n'), function(el, idx) {
+		if (el.length == 0) {
+			return arrow()
+		}
+		
+		var keyword = el.substr(0, 1)
+		switch(keyword) {
+		case '`':
+			return prepare(el.substr(2))
+		case '*':
+			return activity(el.substr(2))
+		case '<':
+			return input(el.substr(2))
 		}
 	})
+	*@
+	
+	//shapes.pop().remove()
+	
+	// layout shapes
+	var X = paper.width / 2
+	var Y = 40
+	console.log(shapes)
+	for (var shape in shapes) {
+		var height = shape.getBBox().height
+		var width = shape.getBBox().width
+		console.log(X, Y)
+		shape.transform('...T' + X + ',' + Y)
+		console.log(shape)
+		Y += height
+	}
+	@*
+	$.each(shapes, function(idx, el) {
+		var height = el.getBBox().height
+		var width = el.getBBox().width
+		console.log(X, Y)
+		el.transform('...T' + X + ',' + Y)
+		console.log(el)
+		Y += height
+	})
+	*@
+
+	// draw arrow between shapes
+
 	$('#edit').focus()
 }
 
 render($('#edit').val())
 
 function arrow() { 
-	var X = paper.width / 2
-	var startY = shapeY - (unit * 4)
-	var endY = shapeY - (unit * 2)
-	
-	var pathString = 'M' + X + ',' + startY
-	pathString += 'V' + endY
-	pathString += 'L' + (X-arrowunit) + ',' + (endY-arrowunit)
-	pathString += 'L' + (X+arrowunit) + ',' + (endY-arrowunit)
-	pathString += 'L' + X + ',' + endY	
+	var Y = unit * 4
+	var pathString = 'M' + arrowunit + ',0'
+	pathString += 'V' + Y
+	pathString += 'L0,' + (Y-arrowunit)
+	pathString += 'L' + (arrowunit*2) + ',' + (Y-arrowunit)
+	pathString += 'L' + arrowunit + ',' + Y
 	return paper.path(pathString)
 }
 
 function prepare(text) {
+	var textSrc = text.split("\\n").join('\n')
+	
+	var text = paper.text(centerX, centerY, textSrc).attr({'font-size':fontsize})
+	var textBBox = text.getBBox()
+	var x = textBBox.x
+	var y = textBBox.y
+	var x2 = textBBox.x2
+	var y2 = textBBox.y2
+	var ym = (y + y2) / 2
+
+	var pathString = 'M' + (x - unit) + ',' + (y - unit)
+	pathString += 'H' + (x2 + unit)
+	pathString += 'L' + (x2 + unit * 2) + ',' + (ym)
+	pathString += 'L' + (x2 + unit) + ',' + (y2 + unit)
+	pathString += 'H' + (x - unit)
+	pathString += 'L' + (x - unit * 2) + ',' + (ym)
+	pathString += 'L' + (x - unit) + ',' + (y - unit)
+	var border = paper.path(pathString)
+	
+	var prepare = paper.set()
+	prepare.push(text, border)
+	
+	return prepare
+}
+
+function prepare__(text) {
 	var text = text.split("\\n").join('\n')
 	var prepareText = paper.text(paper.width / 2, shapeY, text).attr({'font-size':fontsize})
 	var prepareTextBBox = prepareText.getBBox()

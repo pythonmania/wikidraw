@@ -92,25 +92,17 @@ function render(wikitext) {
 
 render($('#edit').val())
 
-function arrow__() {
-	var body = paper.path('M0,' + -(unit*2) + 'L0,' + (unit*2))
-	var headPath = 'M' + -(arrowunit) + ',' + -(unit*2 + arrowunit)
-	headPath += 'Q' + '0' + ',' + (unit*2 + arrowunit*2) + ' ' + arrowunit + ',' + -(unit*2 + arrowunit)
-	// var head = paper.path(headPath)
-	var head = paper.path('M0,' + -(unit*2) + 'L0,' + (unit*2))
-	
-	var arrow = paper.set()
-	arrow.push(head, body)
-	return arrow
-}
-
 function arrow() {
-	var head = paper.path('M-5,8Q0,18,5,8')
-	var body = paper.path('M0,-20L0,10')
+	var arrowAttr = {'stroke':'blue', 'stroke-width':4}
+	var y1 = -(unit + (unit / 3))
+	var y2 = unit - (unit / 3)
+	
+	var head = paper.path('M' + -arrowunit + ',' + (unit - arrowunit) + 'Q0,' + (unit+arrowunit) + ',' + arrowunit + ',' + (unit-arrowunit)).attr(arrowAttr)
+	var body = paper.path('M0,' + y1 + 'L0,' + y2).attr(arrowAttr)
 	
 	var arrow = paper.set()
 	arrow.push(head, body)
-	arrow.height = 42
+	arrow.height = unit * 3
 	return arrow
 }
 

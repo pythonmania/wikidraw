@@ -93,12 +93,12 @@ function render(wikitext) {
 render($('#edit').val())
 
 function arrow() { 
-	var Y = unit * 4
-	var pathString = 'M' + arrowunit + ',0'
+	var Y = unit*2
+	var pathString = 'M0,' + -(Y-arrowunit)
 	pathString += 'V' + Y
-	pathString += 'L0,' + (Y-arrowunit)
-	pathString += 'L' + (arrowunit*2) + ',' + (Y-arrowunit)
-	pathString += 'L' + arrowunit + ',' + Y
+	pathString += 'L' + -arrowunit + ',' + (Y-arrowunit) 
+	pathString += 'L' + arrowunit + ',' + (Y-arrowunit)
+	pathString += 'L0,' + Y
 	return paper.path(pathString)
 }
 

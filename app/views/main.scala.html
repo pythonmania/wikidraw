@@ -82,24 +82,36 @@ function render(wikitext) {
 	_.each(shapes, function(shape) {
 		if(shape) {
 			shape.transform('...T' + X + ',' + Y)
-			Y += shape.getBBox().height
+			// Y += shape.getBBox().height
+			Y += shape.height
 		}
 	})
-	
-	// draw arrow between shapes
+
 	$('#edit').focus()
 }
 
 render($('#edit').val())
 
-function arrow() { 
-	var Y = unit*2
-	var pathString = 'M0,' + -(Y-arrowunit)
-	pathString += 'V' + Y
-	pathString += 'L' + -arrowunit + ',' + (Y-arrowunit) 
-	pathString += 'L' + arrowunit + ',' + (Y-arrowunit)
-	pathString += 'L0,' + Y
-	return paper.path(pathString)
+function arrow__() {
+	var body = paper.path('M0,' + -(unit*2) + 'L0,' + (unit*2))
+	var headPath = 'M' + -(arrowunit) + ',' + -(unit*2 + arrowunit)
+	headPath += 'Q' + '0' + ',' + (unit*2 + arrowunit*2) + ' ' + arrowunit + ',' + -(unit*2 + arrowunit)
+	// var head = paper.path(headPath)
+	var head = paper.path('M0,' + -(unit*2) + 'L0,' + (unit*2))
+	
+	var arrow = paper.set()
+	arrow.push(head, body)
+	return arrow
+}
+
+function arrow() {
+	var head = paper.path('M-5,8Q0,18,5,8')
+	var body = paper.path('M0,-20L0,10')
+	
+	var arrow = paper.set()
+	arrow.push(head, body)
+	arrow.height = 42
+	return arrow
 }
 
 function prepare(textSrc) {
@@ -123,7 +135,7 @@ function prepare(textSrc) {
 
 	var prepare = paper.set()
 	prepare.push(text, border)
-	
+	prepare.height = prepare.getBBox().height
 	return prepare
 }
 
@@ -139,7 +151,7 @@ function activity(text) {
 	
 	var activity = paper.set()
 	activity.push(text, border)
-	
+	activity.height = activity.getBBox().height
 	return activity
 }
 
@@ -163,7 +175,7 @@ function input(text) {
 	
 	var input = paper.set()
 	input.push(text, border)
-	
+	input.height = input.getBBox().height
 	return input
 }
 

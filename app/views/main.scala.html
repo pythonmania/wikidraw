@@ -1,4 +1,4 @@
-<!DOCTYPE html5>
+<!DOCTYPE html>
 
 <html>
     <head>
@@ -9,7 +9,6 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/raphael-min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/underscore-min.js")" type="text/javascript"></script>
     </head>
     <body>
@@ -33,146 +32,70 @@
 		</div>
 		<div class="row-fluid">
 <h4>github issues</h4>
-<ul id='issues'>
-</ul>
+<ul id='issues'></ul>
 		</div>
 		
 		<script language="javascript">
+function render(wikitext) {
+	wikitext = wikitext.split("\\n").join('\n').trim()
+	
+	// reset preview
+	$('#preview').empty();
+
+	// generate each shapes
+	$('#preview').append('<table style="border-width:2px; height:100%; width:100%">')
+	_.each(wikitext.split('\n'), function(wikiline) {
+		$('#preview > table').append('<tr align="center"><td></td></tr>')
+		
+		if (wikiline.length == 0) {
+			$('#preview > table > tbody > tr > td:last').append(arrow())
+		} else {
+			var keyword = wikiline.substr(0, 1)
+			switch(keyword) {
+			case '`':
+				$('#preview > table > tbody > tr > td:last').append(prepare(wikiline.substr(2)))
+				break
+			case '*':
+				$('#preview > table > tbody > tr > td:last').append(activity(wikiline.substr(2)))
+				break
+			case '>':
+				$('#preview > table > tbody > tr > td:last').append(input(wikiline.substr(2)))
+				break
+			case '<':
+				$('#preview > table > tbody > tr > td:last').append(output(wikiline.substr(2)))
+				break
+			}
+		}
+	})
+	$('#preview').append('</table>')
+	
+	$('#edit').focus()
+}
+
 $('#edit').on('input', function(event) {
 	render(event.currentTarget.value)
 })
 
-var paper = Raphael('preview');
-var unit = 15;
-var arrowunit = 8;
-var fontsize = 16;
-var shapeY = 40
-var centerX = paper.width / 2
-var centerY = paper.height / 2
-
-function render(wikitext) {
-	wikitext = wikitext.split("\\n").join('\n').trim()
-	// reset paper
-	paper.clear();
-
-	// generate each shapes
-	var shapes = _.map(wikitext.split('\n'), function(wikiline) {
-		if (wikiline.length == 0) {
-			return arrow()
-		}
-		
-		var keyword = wikiline.substr(0, 1)
-		switch(keyword) {
-		case '`':
-			return prepare(wikiline.substr(2))
-		case '*':
-			return activity(wikiline.substr(2))
-		case '>':
-			return input(wikiline.substr(2))
-		case '<':
-			return output(wikiline.substr(2))
-		default:
-			return undefined
-		}
-	})
-
-	// layout shapes
-	var X = paper.width / 2
-	var Y = 40
-	_.each(shapes, function(shape) {
-		if(shape) {
-			shape.transform('...T' + X + ',' + Y)
-			// Y += shape.getBBox().height
-			Y += shape.height
-		}
-	})
-
-	$('#edit').focus()
-}
-
 render($('#edit').val())
 
 function arrow() {
-	var arrowAttr = {'stroke':'blue', 'stroke-width':4}
-	var y1 = -(unit + (unit / 3))
-	var y2 = unit - (unit / 3)
-	
-	var head = paper.path('M' + -arrowunit + ',' + (unit - arrowunit) + 'Q0,' + (unit+arrowunit) + ',' + arrowunit + ',' + (unit-arrowunit)).attr(arrowAttr)
-	var body = paper.path('M0,' + y1 + 'L0,' + y2).attr(arrowAttr)
-	
-	var arrow = paper.set()
-	arrow.push(head, body)
-	arrow.height = unit * 3
-	return arrow
+	return '<img src="@routes.Assets.at("images/glyphicons_212_down_arrow.png")">'
 }
 
-function prepare(textSrc) {
-	var text = paper.text(0, 0, textSrc).attr({'font-size':fontsize})
-	
-	var h = text.getBBox().height
-	var w = text.getBBox().width	
-	var x = -(w/2 + unit)
-	var y = -(h/2 + unit)
-	var x2 = -x
-	var y2 = -y
-
-	var borderPath = 'M' + x + ',' + y
-	borderPath += 'L' + x2 + ',' + y
-	borderPath += 'L' + (x2+unit) + ',' + 0
-	borderPath += 'L' + x2 + ',' + y2
-	borderPath += 'L' + x + ',' + y2
-	borderPath += 'L' + (x-unit) + ',' + 0
-	borderPath += 'L' + x + ',' + y
-	var border = paper.path(borderPath)
-
-	var prepare = paper.set()
-	prepare.push(text, border)
-	prepare.height = prepare.getBBox().height
-	return prepare
+function prepare(text) {
+	return '<div class="btn btn-primary btn-large disabled">' + text + '</div>'
 }
 
 function activity(text) {
-	var text = paper.text(0, 0, text).attr({'font-size':fontsize})
-	
-	var h = text.getBBox().height
-	var w = text.getBBox().width	
-	var x = -(w/2 + unit)
-	var y = -(h/2 + unit)
-	
-	var border = paper.rect(x, y, (w+unit*2), (h+unit*2))
-	
-	var activity = paper.set()
-	activity.push(text, border)
-	activity.height = activity.getBBox().height
-	return activity
+	return '<div class="btn btn-primary btn-large disabled">' + text + '</div>'
 }
 
 function input(text) {
-	var text = paper.text(0, 0, text).attr({'font-size':fontsize})
-	
-	var h = text.getBBox().height
-	var w = text.getBBox().width	
-	var x2 = w/2 + unit
-	var y2 = h/2 + unit
-	var x = -x2
-	var y = -y2
-	
-	var borderPath = 'M' + x + ',' + y
-	borderPath += 'L' + x2 + ',' + y
-	borderPath += 'L' + (x2+unit) + ',' + 0
-	borderPath += 'L' + x2 + ',' + y2
-	borderPath += 'L' + x + ',' + y2
-	borderPath += 'L' + x + ',' + y
-	var border = paper.path(borderPath)
-	
-	var input = paper.set()
-	input.push(text, border)
-	input.height = input.getBBox().height
-	return input
+	return '<div class="btn btn-primary btn-large disabled">' + text + '</div>'
 }
 
 function output(text) {
-	return input(text)
+	return '<div class="btn btn-primary btn-large disabled">' + text + '</div>'
 }
 		</script>
 		
